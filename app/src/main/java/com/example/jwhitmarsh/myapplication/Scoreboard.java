@@ -6,10 +6,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,8 +43,6 @@ public class Scoreboard extends Activity {
         } else {
             // display error
         }
-
-
     }
 
 
@@ -77,14 +78,26 @@ public class Scoreboard extends Activity {
             try {
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                e.printStackTrace();
+                return "Fucked it";
             }
         }
 
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            //textView.setText(result);
+            TextView battingScore = (TextView) findViewById(R.id.batting_score);
+            TextView battingWickets = (TextView) findViewById(R.id.batting_wickets);
+
+            try {
+                JSONObject reader = new JSONObject(result);
+                String runs = reader.getString("runs");
+
+                battingScore.setText(runs);
+                battingWickets.setText(reader.getString("wickets"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -93,6 +106,7 @@ public class Scoreboard extends Activity {
         // Only display the first 500 characters of the retrieved
         // web page content.
         int len = 500;
+        JSONObject reader = new JSONObject();
 
         Log.d(DEBUG_TAG, "Got here!");
         try {
@@ -117,16 +131,10 @@ public class Scoreboard extends Activity {
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
-
-
-        } catch (Error e) {
-            Log.d(DEBUG_TAG, e.toString());
-            is.close();
         } finally {
             if (is != null) {
                 is.close();
             }
-            return "";
         }
     }
 
