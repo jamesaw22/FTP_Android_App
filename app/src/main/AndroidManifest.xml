@@ -21,7 +21,10 @@
         </activity>
         <activity
             android:name="com.example.jwhitmarsh.myapplication.Scoreboard"
-            android:label="@string/title_activity_scoreboard"></activity>
+            android:label="@string/title_activity_scoreboard"
+            android:screenOrientation="portrait">
+            <!--TODO for the time being I have fixed orientation-->
+        </activity>
     </application>
 
 </manifest>

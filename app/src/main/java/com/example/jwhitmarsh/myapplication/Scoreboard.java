@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.JsonReader;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +25,8 @@ import java.net.URL;
 
 public class Scoreboard extends Activity {
     private static final String DEBUG_TAG = "HttpExample";
+    final Handler h = new Handler();
+    Runnable getScoreInterval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +41,30 @@ public class Scoreboard extends Activity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-           // new DownloadWebpageTask().execute("bas");
+            // new DownloadWebpageTask().execute("bas");
         } else {
             // display error
         }
+
+        //set up Runnable which gets our score
+        getScoreInterval = new Runnable() {
+            private long time = 0;
+
+            @Override
+            public void run() {
+                // do stuff then
+                // can call h again after work!
+                new DownloadWebpageTask().execute("bas");
+
+                time += 1000;
+                Log.d("TimerExample", "Going for... " + time);
+                h.postDelayed(this, 5000);
+            }
+        };
+
+        //trigger the runnable
+        h.postDelayed(getScoreInterval, 5000);
+
     }
 
 
@@ -65,7 +87,7 @@ public class Scoreboard extends Activity {
         switch (id) {
             case R.id.action_settings:
                 return true;
-            case R.id.action_refresh:
+            case R.id.action_refresh: // manual refresh click
                 new DownloadWebpageTask().execute("bas");
                 return true;
         }
@@ -73,6 +95,10 @@ public class Scoreboard extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    protected void onStop() {
+        h.removeCallbacks(getScoreInterval);
+        super.onStop();
+    }
 
 
     private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
@@ -99,7 +125,8 @@ public class Scoreboard extends Activity {
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
         // web page content.
-        int len = 500;
+        // TODO this might need to change if commentary is long
+        int len = 5000;
         JSONObject reader = new JSONObject();
 
         Log.d(DEBUG_TAG, "Got here!");
