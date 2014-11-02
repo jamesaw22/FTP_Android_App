@@ -1,15 +1,17 @@
-{
-    "runs": 230,
+var http = require('http');
+
+var data = {
+    "runs": 300,
     "wickets": 3,
-    "last-over": 20,
-    "last-over-runs": 3,
-    "run-rate": 3.50,
-    "batter-strike": {
+    "lastover": 20,
+    "lastoverruns": 3,
+    "runrate": 3.50,
+    "batterstrike": {
         "name": "Joe Bloggs",
         "score": 34,
         "balls": 40
     },
-    "batter-non-strike": {
+    "batternonstrike": {
         "name": "Bob Upanddown",
         "score": 0,
         "balls": 10
@@ -20,4 +22,21 @@
         "wickets": 2,
         "run-rate": 5.00
     }
+};
+
+function randBetween(min, max) {
+    return Math.floor(Math.random() * max) + min;
 }
+
+var app = http.createServer(function(req, res) {
+    data.runrate = randBetween(100, 600) / 100;
+    data.lastover = randBetween(0, 50);
+    data.runs = (data.runrate * data.lastover).toFixed();
+    data.wickets = randBetween(0, 10);
+    data.lastoverruns = randBetween(0, 8);
+
+
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(data, null, 3));
+});
+app.listen(9899);

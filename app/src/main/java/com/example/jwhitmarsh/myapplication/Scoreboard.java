@@ -39,7 +39,7 @@ public class Scoreboard extends Activity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadWebpageTask().execute("bas");
+           // new DownloadWebpageTask().execute("bas");
         } else {
             // display error
         }
@@ -62,13 +62,18 @@ public class Scoreboard extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_refresh:
+                new DownloadWebpageTask().execute("bas");
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
         @Override
@@ -86,18 +91,7 @@ public class Scoreboard extends Activity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            TextView battingScore = (TextView) findViewById(R.id.batting_score);
-            TextView battingWickets = (TextView) findViewById(R.id.batting_wickets);
-
-            try {
-                JSONObject reader = new JSONObject(result);
-                String runs = reader.getString("runs");
-
-                battingScore.setText(runs);
-                battingWickets.setText(reader.getString("wickets"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            buildScoreboard(result);
         }
     }
 
@@ -110,7 +104,7 @@ public class Scoreboard extends Activity {
 
         Log.d(DEBUG_TAG, "Got here!");
         try {
-            URL url = new URL("http://bic6588:9898/data.json");
+            URL url = new URL("http://bic6588:9899");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -144,5 +138,20 @@ public class Scoreboard extends Activity {
         char[] buffer = new char[len];
         reader.read(buffer);
         return new String(buffer);
+    }
+
+    public void buildScoreboard(String data) {
+        TextView battingScore = (TextView) findViewById(R.id.batting_score);
+        TextView battingWickets = (TextView) findViewById(R.id.batting_wickets);
+
+        try {
+            JSONObject reader = new JSONObject(data);
+            String runs = reader.getString("runs");
+
+            battingScore.setText(runs);
+            battingWickets.setText(reader.getString("wickets"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
