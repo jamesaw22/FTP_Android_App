@@ -1,0 +1,23 @@
+{
+    "runs": 230,
+    "wickets": 3,
+    "last-over": 20,
+    "last-over-runs": 3,
+    "run-rate": 3.50,
+    "batter-strike": {
+        "name": "Joe Bloggs",
+        "score": 34,
+        "balls": 40
+    },
+    "batter-non-strike": {
+        "name": "Bob Upanddown",
+        "score": 0,
+        "balls": 10
+    },
+    "bowler": {
+        "overs": 9.1,
+        "runs": 45,
+        "wickets": 2,
+        "run-rate": 5.00
+    }
+}
