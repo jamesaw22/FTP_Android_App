@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
 
 
 public class Scoreboard extends Activity {
@@ -32,10 +35,7 @@ public class Scoreboard extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
-        setTitle("Nim v Les");
 
-        TextView battingTeam = (TextView) findViewById(R.id.batting_team);
-        battingTeam.setText("Nimeämätön XI");
 
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -52,19 +52,17 @@ public class Scoreboard extends Activity {
 
             @Override
             public void run() {
-                // do stuff then
                 // can call h again after work!
                 new DownloadWebpageTask().execute("bas");
 
                 time += 1000;
                 Log.d("TimerExample", "Going for... " + time);
-                h.postDelayed(this, 5000);
+                h.postDelayed(this, 300000); // refresh every 5 mins
             }
         };
 
         //trigger the runnable
-        h.postDelayed(getScoreInterval, 5000);
-
+        h.postDelayed(getScoreInterval, 0);
     }
 
 
@@ -131,7 +129,7 @@ public class Scoreboard extends Activity {
 
         Log.d(DEBUG_TAG, "Got here!");
         try {
-            URL url = new URL("http://bic6588:9899");
+            URL url = new URL("http://bic6588:9899/");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -168,15 +166,76 @@ public class Scoreboard extends Activity {
     }
 
     public void buildScoreboard(String data) {
+        TextView battingTeam = (TextView) findViewById(R.id.batting_team);
         TextView battingScore = (TextView) findViewById(R.id.batting_score);
         TextView battingWickets = (TextView) findViewById(R.id.batting_wickets);
 
+        TextView overNumber = (TextView) findViewById(R.id.over_number);
+        TextView overRuns = (TextView) findViewById(R.id.over_runs);
+        TextView overRunRate = (TextView) findViewById(R.id.over_rr);
+
+        TextView sBatterName = (TextView) findViewById(R.id.sbatter_name);
+        TextView sBatterRuns = (TextView) findViewById(R.id.sbatter_runs);
+        TextView sBatterBalls = (TextView) findViewById(R.id.sbatter_balls);
+        TextView nsBatterName = (TextView) findViewById(R.id.nsbatter_name);
+        TextView nsBatterRuns = (TextView) findViewById(R.id.nsbatter_runs);
+        TextView nsBatterBalls = (TextView) findViewById(R.id.nsbatter_balls);
+
+        TextView bowlerName = (TextView) findViewById(R.id.bowler_name);
+        TextView bowlerType = (TextView) findViewById(R.id.bowler_type);
+        TextView bowlerOvers = (TextView) findViewById(R.id.bowler_overs);
+        TextView bowlerMaidens = (TextView) findViewById(R.id.bowler_maidens);
+        TextView bowlerRuns = (TextView) findViewById(R.id.bowler_runs);
+        TextView bowlerWickets = (TextView) findViewById(R.id.bowler_wickets);
+
+        LinearLayout commentaryLayout = (LinearLayout) findViewById(R.id.commentary);
+        commentaryLayout.removeAllViews();
+
         try {
             JSONObject reader = new JSONObject(data);
-            String runs = reader.getString("runs");
 
-            battingScore.setText(runs);
+            setTitle(reader.getString("shortTitle"));
+
+            //overall
+            battingScore.setText(reader.getString("runs"));
             battingWickets.setText(reader.getString("wickets"));
+            battingTeam.setText(reader.getString("battingTeam"));
+
+            //over info
+            overNumber.setText(reader.getString("lastOver"));
+            overRuns.setText("(" + reader.getString("lastOverRuns") + " runs)");
+            overRunRate.setText(reader.getString("runRate"));
+
+            //on strike batter
+            JSONObject sBatterObj = reader.getJSONObject("sBatter");
+            sBatterName.setText(sBatterObj.getString("name"));
+            sBatterRuns.setText(sBatterObj.getString("runs"));
+            sBatterBalls.setText("(" + sBatterObj.getString("balls") + ")");
+
+            //non strike batter
+            JSONObject nsBatterObj = reader.getJSONObject("nsBatter");
+            nsBatterName.setText(nsBatterObj.getString("name"));
+            nsBatterRuns.setText(nsBatterObj.getString("runs"));
+            nsBatterBalls.setText("(" + nsBatterObj.getString("balls") + ")");
+
+            //bowler
+            JSONObject bowlerObj = reader.getJSONObject("bowler");
+            bowlerName.setText(bowlerObj.getString("name"));
+            bowlerType.setText("(" + bowlerObj.getString("type") + ")");
+            bowlerOvers.setText(bowlerObj.getString("overs"));
+            bowlerMaidens.setText(bowlerObj.getString("maidens"));
+            bowlerRuns.setText(bowlerObj.getString("runs"));
+            bowlerWickets.setText(bowlerObj.getString("wickets"));
+
+            //commentary
+            JSONArray commentaryData = reader.getJSONArray("commentary");
+            for (int x = 0; x < commentaryData.length(); x++) {
+                JSONObject commentaryObj = commentaryData.getJSONObject(x);
+                TextView tv = new TextView(this);
+                tv.setText(commentaryObj.getString("text"));
+                commentaryLayout.addView(tv);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

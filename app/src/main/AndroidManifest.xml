@@ -21,10 +21,13 @@
         </activity>
         <activity
             android:name="com.example.jwhitmarsh.myapplication.Scoreboard"
+            android:parentActivityName=".MyActivity"
             android:label="@string/title_activity_scoreboard"
             android:screenOrientation="portrait">
             <!--TODO for the time being I have fixed orientation-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.jwhitmarsh.myapplication.MyActivity" />
         </activity>
     </application>
-
 </manifest>

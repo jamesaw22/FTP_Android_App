@@ -32,7 +32,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/batting_score"
-                android:text="400"
+                android:gravity="right"
+                android:text="0"
                 android:textSize="100dp" />
 
             <TextView
@@ -45,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="100dp"
-                android:text="2"
+                android:text="0"
                 android:id="@+id/batting_wickets" />
 
         </LinearLayout>
@@ -68,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="5dp"
-                android:text="20"
+                android:text="0"
                 android:gravity="left" />
 
             <TextView
@@ -76,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="5dp"
-                android:text="(2 runs)" />
+                android:text="(0 runs)" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -89,7 +90,7 @@
                 android:id="@+id/over_rr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3.33" />
+                android:text="0" />
         </LinearLayout>
 
         <RelativeLayout
@@ -97,30 +98,125 @@
             android:layout_height="wrap_content"
             android:paddingBottom="10dp">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sbatter_name"
+                    android:text="C. Tilyard"
+                    android:layout_alignParentLeft="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sbatter_runs"
+                    android:paddingLeft="5dp"
+                    android:text="32" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sbatter_balls"
+                    android:paddingLeft="5dp"
+                    android:text="(29)" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nsbatter_name"
+                    android:text="C. Tilyard"
+                    android:layout_alignParentLeft="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nsbatter_runs"
+                    android:paddingLeft="5dp"
+                    android:text="32" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nsbatter_balls"
+                    android:paddingLeft="5dp"
+                    android:text="(29)" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/batter_one"
-                android:text="C. Tilyard 25 (46b)*"
+                android:id="@+id/bowler_name"
+                android:text="G. Docker"
                 android:layout_alignParentLeft="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/batter_two"
-                android:text="L. Woodley 0 (5b)"
-                android:layout_alignParentRight="true" />
-        </RelativeLayout>
+                android:id="@+id/bowler_type"
+                android:paddingLeft="5dp"
+                android:text="(rfs)" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="G. Docker (rfs) 5-0-13-1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bowler_overs"
+                android:paddingLeft="5dp"
+                android:text="5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bowler_maidens"
+                android:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bowler_runs"
+                android:text="25" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bowler_wickets"
+                android:text="1" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/commentary"
             android:orientation="vertical"
             android:paddingTop="20dp">
 
@@ -132,21 +228,18 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Commentary"
+                android:text="@string/commentary"
                 android:paddingTop="10dp" />
 
-            <TextView
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ff9900"
-                android:text="24.6 1W Grout to Tilyard : [runout] Greedy and plain stupid. Tilyard and Miheso have tried to go for the extra run, taking on Rayudu's arm in the deep and losing. And that wicket's been thrown away.C. Tilyard run out (S. Rayudu) 41 (67b 2x4 1x6) SR:61.19" />
+                android:orientation="vertical"
+                android:id="@+id/commentary">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="24.5 Grout to Tilyard : Ooh, so close to an edge. Rayudu was sure he heard something but the umpire isn't convinced." />
-
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
+
 </ScrollView>
